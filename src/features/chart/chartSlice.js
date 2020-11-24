@@ -20,7 +20,7 @@ export const { increment, decrement, add } = chartSlice.actions;
 
 export const fetchChartData = language => {
   return dispatch => {
-    fetch(`http://localhost:5000/websites?=${language}`, {
+    fetch(`http://localhost:5000/websites?tags=${language}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -53,7 +53,40 @@ export const groupByLanguage = createSelector(
   [selectData, getSelectedLanguages],
   (data, languages) => {
     // TODO: Implement
-    return;
+    //for every language
+      //find all websites with that language
+      //add found websites' counts to language sum
+    var results = _.map(languages, language=>{
+        // in here, we are working on a single language
+        var sites_with_this_lang = _.filter(data, site=>{
+            //get list of tag names for site
+            var site_tag_names = _.map(site.tags, tag=>tag.name);
+            return _.contains(site_tag_names, language.name);
+          }
+        );
+        //get sum of views for every relevant site 
+        //returns a list of counts
+        var site_sums = _.map(sites_with_this_lang, site=>{
+            var site_sum_obj = _.reduce(site.website_views, (memo, view)=>{
+              return {count: parseInt(memo.count) + parseInt(view.count)};
+              }, {count:'0'}
+            );
+            //should return sum of all daily views
+            return site_sum_obj.count;            
+          }
+        );
+        //get sum across sites for this lang
+        var total_views = _.reduce(site_sums, (memo, n)=>{
+            return memo + n;
+          }, 0
+        );
+        //should return number of total views in this language
+        var r = {language: language.name, 
+                 views: total_views };
+        return r
+      }
+    );//end map
+    return results;
   }
 );
 

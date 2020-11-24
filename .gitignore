@@ -13,6 +13,7 @@ __pycache__/
 /build
 
 # misc
+.vscode
 .DS_Store
 .env.local
 .env.development.local

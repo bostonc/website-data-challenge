@@ -14,7 +14,16 @@
 }
 
 .time_series__header {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .time_series__chart_row {
+  display: flex;
+  justify-content: center;
+}
+
+.title {
+  margin: auto;
+  text-align: center;
 }
